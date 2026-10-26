@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ne">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14532d"><link rel="manifest" href="manifest.json">
+<title>GharKhata</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><div><h1>🏡 GharKhata</h1><small>घरायसी हिसाबकिताब • Offline + Online Sync</small></div><span id="netBadge" class="badge">जाँच हुँदैछ…</span></header>
+<nav id="nav">
+<button data-page="dashboard" class="active">ड्यासबोर्ड</button><button data-page="entry">नयाँ कारोबार</button><button data-page="history">कारोबार सूची</button><button data-page="udhar">उधारो</button><button data-page="workers">कामदार</button><button data-page="reports">रिपोर्ट</button><button data-page="settings">सेटिङ</button>
+</nav>
+<main>
+<section id="page-dashboard" class="page active">
+<h2>ड्यासबोर्ड</h2><div class="cards">
+<article><small>कुल आम्दानी</small><strong id="totalIncome">रु. 0</strong></article>
+<article><small>कुल खर्च</small><strong id="totalExpense">रु. 0</strong></article>
+<article><small>बाँकी रकम (नेट)</small><strong id="netTotal">रु. 0</strong></article>
+<article><small>Sync हुन बाँकी</small><strong id="pendingCount">0</strong></article></div>
+<div class="panel"><h3>हालका कारोबार</h3><div id="recent"></div></div>
+</section>
+<section id="page-entry" class="page"><h2>नयाँ कारोबार</h2>
+<form id="entryForm" class="panel">
+<input type="hidden" id="recordId">
+<div class="grid">
+<label>कारोबार प्रकार<select id="type" required><option value="आम्दानी">आम्दानी</option><option value="खर्च">खर्च</option><option value="उधारो लिएको">उधारो लिएको</option><option value="उधारो दिएको">उधारो दिएको</option><option value="उधारो भुक्तानी">उधारो भुक्तानी</option><option value="ज्याला भुक्तानी">ज्याला भुक्तानी</option><option value="सामान खरिद">सामान खरिद</option></select></label>
+<label>मिति (AD)<input id="date" type="date" required></label>
+<label>रकम (रु.)<input id="amount" type="number" min="0.01" step="0.01" required></label>
+<label>शीर्षक / सामान / व्यक्ति<input id="title" maxlength="160" required placeholder="जस्तै: तरकारी बिक्री"></label>
+<label>व्यक्ति / पसल<input id="person" maxlength="120"></label>
+<label>फोन नम्बर<input id="phone" inputmode="tel" maxlength="20"></label>
+<label>श्रेणी<select id="category"><option>घरखर्च</option><option>खाद्यान्न</option><option>व्यवसाय</option><option>खेती</option><option>यातायात</option><option>स्वास्थ्य</option><option>शिक्षा</option><option>ज्याला</option><option>उधारो</option><option>अन्य</option></select></label>
+<label>भुक्तानी माध्यम<select id="paymentMode"><option>नगद</option><option>बैंक</option><option>डिजिटल वालेट</option><option>उधारो</option></select></label>
+<label>ब्याज दर (% वार्षिक)<input id="interestRate" type="number" min="0" step="0.01" value="0"></label>
+<label>तिर्ने मिति<input id="dueDate" type="date"></label>
+<label>सम्बन्धित ID (वैकल्पिक)<input id="relatedId" placeholder="उधारो/कामदार ID"></label>
+<label>रसिद फोटो/PDF<input id="receipt" type="file" accept="image/*,.pdf"></label>
+<label class="wide">विवरण<textarea id="note" rows="3" maxlength="1000"></textarea></label>
+</div><p class="hint">इन्टरनेट नभए कारोबार यसै उपकरणमा सुरक्षित हुन्छ। इन्टरनेट फर्केपछि “Sync Now” थिच्नुहोस्। रसिद अपलोड Sync हुँदा मात्र हुन्छ।</p>
+<div class="actions"><button class="primary" type="submit">सुरक्षित गर्नुहोस्</button><button type="button" id="resetForm">नयाँ फाराम</button></div><p id="formMsg" role="status"></p>
+</form></section>
+<section id="page-history" class="page"><h2>कारोबार खोज्नुहोस्</h2><div class="panel"><div class="grid"><label>खोजी<input id="searchText" placeholder="शीर्षक, व्यक्ति, फोन, ID"></label><label>प्रकार<select id="filterType"><option value="">सबै प्रकार</option><option>आम्दानी</option><option>खर्च</option><option>उधारो लिएको</option><option>उधारो दिएको</option><option>उधारो भुक्तानी</option><option>ज्याला भुक्तानी</option><option>सामान खरिद</option></select></label><label>देखि<input id="fromDate" type="date"></label><label>सम्म<input id="toDate" type="date"></label></div><div class="actions"><button id="searchBtn" class="primary">खोज्नुहोस्</button><button id="exportCsv">CSV Export</button></div></div><div id="historyList"></div></section>
+<section id="page-udhar" class="page"><h2>उधारो सारांश</h2><div class="cards"><article><small>उधारो लिएको</small><strong id="borrowed">रु. 0</strong></article><article><small>उधारो दिएको</small><strong id="lent">रु. 0</strong></article><article><small>उधारो भुक्तानी</small><strong id="paidBack">रु. 0</strong></article></div><p class="hint">उधारो कारोबारमा सम्बन्धित व्यक्तिको नाम र उधारो ID राख्नुहोस्। यो प्रारम्भिक संस्करणले कारोबारका आधारमा कुल देखाउँछ; व्यक्ति/ऋणअनुसार साँवा-ब्याज किस्ता मिलान थप चरणमा गर्नुपर्छ।</p><div id="udharList"></div></section>
+<section id="page-workers" class="page"><h2>कामदार सूची</h2><form id="workerForm" class="panel"><div class="grid"><label>नाम<input id="workerName" required></label><label>फोन<input id="workerPhone"></label><label>दैनिक ज्याला (रु.)<input id="workerWage" type="number" min="0" step="0.01" required></label></div><button class="primary">कामदार सुरक्षित गर्नुहोस्</button></form><div id="workerList"></div><p class="hint">कामदार विवरण स्थानीय रूपमा सुरक्षित हुन्छ। हाजिरी/ज्याला गणना तथा बहु-किस्ता भुक्तानीको पूर्ण ledger अर्को चरणमा जोड्न सकिन्छ।</p></section>
+<section id="page-reports" class="page"><h2>रिपोर्ट</h2><div class="panel"><p>हालको उपकरणमा सुरक्षित कारोबारको सारांश। प्रिन्ट वा PDF का लागि “Print / Save PDF” प्रयोग गर्नुहोस्।</p><button id="printReport" class="primary">Print / Save PDF</button><button id="backupJson">JSON Backup</button><div id="reportSummary"></div></div></section>
+<section id="page-settings" class="page"><h2>सेटिङ तथा Sync</h2><div class="panel"><label>Google Apps Script Web App URL<input id="apiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec"></label><label>Sync Key (आफैंले बनाएको लामो गोप्य वाक्य)<input id="syncKey" type="password" autocomplete="new-password"></label><div class="actions"><button id="saveSettings" class="primary">सेटिङ सुरक्षित गर्नुहोस्</button><button id="syncNow">Sync Now</button></div><p id="syncMsg" role="status"></p><p class="hint">Sync Key server-side PIN/साधारण access token हो, पूर्ण enterprise login होइन। सार्वजनिक URL वा कमजोर key प्रयोग नगर्नुहोस्। यो app स्थानीय डेटा browser/device मा राख्छ; एउटै device/browser profile मा मात्र स्वतः उपलब्ध हुन्छ।</p><hr><button id="downloadApp">App फाइलहरू कसरी राख्ने?</button><p>स्थापना: यसलाई HTTPS hosting मा राखेर मोबाइलमा “Add to Home Screen” गर्नुहोस्। Service worker का कारण app shell offline खुल्छ। कारोबार IndexedDB मा राखिन्छ र URL/key सेट गरेपछि online हुँदा Sync गर्न सकिन्छ।</p></div></section>
+</main><footer>GharKhata • Offline local records + optional Google Sheets sync</footer>
+<script src="app.js"></script>
+</body></html>
